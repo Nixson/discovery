@@ -52,8 +52,10 @@ func (d *locatorDiscoveryProviderImpl) getUrlCache(serviceName string) []string 
 		return []string{}
 	}
 
-	cachedServiceUrl, _ := d.urlCache.Get(getServiceUrlCacheKey(envServiceUrlCachePrefix, serviceName))
-	return cachedServiceUrl.([]string)
+	if cachedServiceUrl, ok := d.urlCache.Get(getServiceUrlCacheKey(envServiceUrlCachePrefix, serviceName)); ok {
+		return cachedServiceUrl.([]string)
+	}
+	return []string{}
 }
 
 func (d *locatorDiscoveryProviderImpl) setUrlCache(serviceName string, serviceUrls []string) {

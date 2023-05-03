@@ -134,9 +134,10 @@ func (d *kubernetesDiscoveryProviderImpl) getNamespaceCache() string {
 		return ""
 	}
 
-	cachedCurrentNamespace, _ := d.namespaceCache.Get(currentNameSpaceCacheKey)
-
-	return cachedCurrentNamespace.(string)
+	if cachedCurrentNamespace, ok := d.namespaceCache.Get(currentNameSpaceCacheKey); ok {
+		return cachedCurrentNamespace.(string)
+	}
+	return ""
 }
 
 func (d *kubernetesDiscoveryProviderImpl) setNamespaceCache(namespace string) {
