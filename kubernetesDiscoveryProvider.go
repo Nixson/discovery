@@ -152,8 +152,11 @@ func (d *kubernetesDiscoveryProviderImpl) getUrlCache(serviceName string) string
 		return ""
 	}
 
-	cachedServiceUrl, _ := d.urlCache.Get(getServiceUrlCacheKey(serviceUrlCachePrefix, serviceName))
-	return cachedServiceUrl.(string)
+	if cachedServiceUrl, ok := d.urlCache.Get(getServiceUrlCacheKey(serviceUrlCachePrefix, serviceName)); ok {
+		fmt.Println(cachedServiceUrl)
+		return cachedServiceUrl.(string)
+	}
+	return ""
 }
 
 func (d *kubernetesDiscoveryProviderImpl) setUrlCache(serviceName, serviceUrl string) {
