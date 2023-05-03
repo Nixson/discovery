@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"time"
 
 	"github.com/patrickmn/go-cache"
@@ -60,7 +59,7 @@ func (d *kubernetesDiscoveryProviderImpl) discoveryServiceUrl(serviceName string
 	} else {
 		currentNamespaceBytes, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/namespace")
 		if err != nil {
-			log.Println("Kubernetes Server not available")
+			fmt.Println("Kubernetes Server not available")
 			return []string{}, err
 		}
 
@@ -68,17 +67,17 @@ func (d *kubernetesDiscoveryProviderImpl) discoveryServiceUrl(serviceName string
 		d.setNamespaceCache(currentNamespace)
 	}
 
-	log.Println("Current kubernetes namespace: " + currentNamespace)
+	fmt.Println("Current kubernetes namespace: " + currentNamespace)
 
 	config, err := rest.InClusterConfig()
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		return []string{}, err
 	}
 	// creates the clientset
 	clientset, err := kuber.NewForConfig(config)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		return []string{}, err
 	}
 
@@ -88,7 +87,7 @@ func (d *kubernetesDiscoveryProviderImpl) discoveryServiceUrl(serviceName string
 
 	pods, err := clientset.CoreV1().Pods(currentNamespace).List(context.TODO(), listOptions)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		return []string{}, err
 	}
 
@@ -112,7 +111,7 @@ func (d *kubernetesDiscoveryProviderImpl) discoveryServiceUrl(serviceName string
 
 	services, err := clientset.CoreV1().Services(currentNamespace).List(context.TODO(), listOptions)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		return []string{}, err
 	}
 

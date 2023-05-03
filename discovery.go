@@ -3,7 +3,6 @@ package discovery
 import (
 	"errors"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 )
@@ -64,11 +63,12 @@ func (ds *DiscoveryServiceImpl) getDiscoveryProvider(providerName string) (disco
 }
 
 func (ds *DiscoveryServiceImpl) FindUrl(serviceName string) (string, error) {
+	fmt.Println("FindUrl", serviceName)
 	var urls []string
 	for _, p := range ds.providers {
 		fundedUrls, err := p.discoveryServiceUrl(serviceName)
 		if err != nil {
-			log.Println(fmt.Sprintf("Error in discovery: '%s'", err))
+			fmt.Println(fmt.Sprintf("Error in discovery: '%s'", err))
 			continue
 		}
 		urls = append(urls, fundedUrls...)
